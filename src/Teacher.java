@@ -5,7 +5,7 @@ public class Teacher {
 	
 	final String NAME;
 	ArrayList<Course> courses = new ArrayList<Course>();
-	String skills;
+	String skills = "";
 	
 	public Teacher(String NAME){
 		this.NAME = NAME;
@@ -14,6 +14,6 @@ public class Teacher {
 	
 	public void addCourse(Course course){ courses.add(course); }
 	
-	public void addSkill(String skill){  skills = skills + "," + skill;     }
+	public void addSkill(String skill){  skills = skills + " " + skill;     }
 	
 }
