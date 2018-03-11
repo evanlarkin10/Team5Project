@@ -123,9 +123,23 @@ public class ReadExcel extends JFrame implements ActionListener{
 			}
 		}
 		
+		//Add skills to teacher 
+		column = wb.getSheet("Master Schedule").findCell("Teachable Skill").getColumn();
+		row = wb.getSheet("Master Schedule").findCell("Teachable Skill").getRow() + 1;
+		
+		for(Teacher teacher : teachers){
+			ArrayList<String> skills = new ArrayList<String>();
+			String teacherSkill = wb.getSheet("Master Schedule").getCell(column ,row + teachers.indexOf(teacher)).getContents() ;
+			skills.add(teacherSkill);
+			
+			for(String skill : skills){
+				teacher.addSkill(skill);
+			}
+		}
+		
 		//Print out teachers , courses, and Period they teach
 		for(Teacher teacher : teachers){
-			System.out.println(teacher.NAME);
+			System.out.println(teacher.NAME + " Skill:" + teacher.skills);
 			for(Course course : teacher.courses){
 				System.out.println(course.courseTitle + " " + course.period);
 			}
