@@ -6,9 +6,11 @@ public class Teacher {
 	final String NAME;
 	ArrayList<Course> courses = new ArrayList<Course>();
 	String skills = "";
+	String roomNumber;
 	
-	public Teacher(String NAME){
+	public Teacher(String NAME, String roomIn){
 		this.NAME = NAME;
+		this.roomNumber = roomIn;
 	}
 	
 	
