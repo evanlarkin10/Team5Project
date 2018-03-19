@@ -1,19 +1,25 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import jxl.*;
+import jxl.read.biff.BiffException;
 public class ConfigWorkbook {
 	private Sheet masterSchedule;
 	private Sheet supplyList;
 	private Sheet skills;
 	private Sheet absenceSchedule;
 	private Sheet tallySheet;
+	private File configFile;
 	
-	public ConfigWorkbook(Workbook wbIn) {
-		masterSchedule = wbIn.getSheet("Master Schedule");
-		supplyList = wbIn.getSheet("Supply List");
-		skills = wbIn.getSheet("Skills");
-		tallySheet = wbIn.getSheet("Tally");
-		absenceSchedule = wbIn.getSheet("Week X");
+	public ConfigWorkbook(File configFileIn) throws BiffException, IOException {
+		configFile = configFileIn;
+		Workbook wb = Workbook.getWorkbook(configFileIn);
+		masterSchedule = wb.getSheet("Master Schedule");
+		supplyList = wb.getSheet("Supply List");
+		skills = wb.getSheet("Skills");
+		tallySheet = wb.getSheet("Tally");
+		absenceSchedule = wb.getSheet("Week X");
 	}
 	
 	public void getTeachers() {
@@ -87,6 +93,13 @@ public class ConfigWorkbook {
 				}
 				System.out.println();
 			}
+	}
+
+	public void resetMonthlyTally() {
+		
+	}
+	public void resetWeeklyTally() {
+		
 	}
 			
 	
