@@ -85,11 +85,11 @@ public class UserInterface extends JFrame implements ActionListener{
 			try {
 				configWorkbook.resetWeeklyTally();
 			} catch (BiffException | WriteException | IOException e1) {
-				// TODO Auto-generated catch block
+				System.out.println("There's been an issue resetting the Weekly Tally");
 				e1.printStackTrace();
 			}
 		}
-	       
+
 		}
 	
 	public static void main(String []args) throws Exception{
@@ -127,7 +127,6 @@ public class UserInterface extends JFrame implements ActionListener{
 		ArrayList<Teacher> onCallersP3A = workbook.getSpareList(Period.Period3A, teachers);
 		ArrayList<Teacher> onCallersP3B = workbook.getSpareList(Period.Period3B, teachers);
 		ArrayList<Teacher> onCallersP4 = workbook.getSpareList(Period.Period4, teachers);
-		
 	}
 	
 }
