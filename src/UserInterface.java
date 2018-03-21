@@ -108,17 +108,22 @@ public class UserInterface extends JFrame implements ActionListener{
 		label.setText("Workbook Found");
 		
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-		int numberOfPeriods = 5;
-		int column;
-		int row;
-		int next;
+		
 		
 		//Sets up workbook
 		File src = configFile;
 		ConfigWorkbook workbook = new ConfigWorkbook(configFile);
 		configWorkbook = workbook;
-		workbook.getTeachers();
+		teachers = workbook.getTeachers();
+		
+		//Available On-Callers by period {Note it doesnt check for absents yet}
+		ArrayList<Teacher> onCallersP1 = workbook.getSpareList(Period.Period1, teachers);
+		ArrayList<Teacher> onCallersP2 = workbook.getSpareList(Period.Period2, teachers);
+		ArrayList<Teacher> onCallersP3A = workbook.getSpareList(Period.Period3A, teachers);
+		ArrayList<Teacher> onCallersP3B = workbook.getSpareList(Period.Period3B, teachers);
+		ArrayList<Teacher> onCallersP4 = workbook.getSpareList(Period.Period4, teachers);
 		
 	}
 	
 }
+
