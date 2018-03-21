@@ -7,10 +7,4 @@ public class Scheduler {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
 }
