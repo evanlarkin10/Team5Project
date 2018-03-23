@@ -2,9 +2,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import jxl.*;
-import jxl.write.*;
-import jxl.write.Number;
-import jxl.write.biff.RowsExceededException;
 import jxl.read.biff.BiffException;
 
 public class ConfigWorkbook {
@@ -14,14 +11,10 @@ public class ConfigWorkbook {
 	private Sheet absenceSchedule;
 	private Sheet tallySheet;
 	private File configFile;
-	private Workbook wb;
-	private WritableWorkbook wbWritable;
-	private WritableSheet tallySheetWritable;
-	private WritableWorkbook copyDocument;
 	
 	public ConfigWorkbook(File configFileIn) throws BiffException, IOException {
 		configFile = configFileIn;
-		wb = Workbook.getWorkbook(configFileIn);
+		Workbook wb = Workbook.getWorkbook(configFileIn);
 		masterSchedule = wb.getSheet("Master Schedule");
 		supplyList = wb.getSheet("Supply List");
 		skills = wb.getSheet("Skills");
@@ -49,7 +42,10 @@ public class ConfigWorkbook {
 			//Add courses to teachers starting with the first teacher
 			column = masterSchedule.findCell(teachers.get(0).NAME).getColumn();
 			row = masterSchedule.findCell(teachers.get(0).NAME).getRow();
+<<<<<<< HEAD
 			next = 0;
+=======
+>>>>>>> parent of 713e7ed... resetMonthlyTally method added to ConfigWorkbook class. Config file moved out of ExcelWorkbook folder.
 			for(Teacher teacher : teachers){
 				ArrayList<Course> courses = new ArrayList<Course>();
 				for(int i = 1; i <= numberOfPeriods; i++){
@@ -71,12 +67,17 @@ public class ConfigWorkbook {
 						period = Period.Period4;
 						break;	
 					}
+<<<<<<< HEAD
 					courses.add(new Course(masterSchedule.getCell(column + i ,row + next).getContents(), period ,teacher));
+=======
+					courses.add(new Course(masterSchedule.getCell(column + i ,row).getContents(), period ,teacher));
+>>>>>>> parent of 713e7ed... resetMonthlyTally method added to ConfigWorkbook class. Config file moved out of ExcelWorkbook folder.
 				}
 				
 				for(Course course : courses){
 					teacher.addCourse(course);
 				}
+<<<<<<< HEAD
 				next = next + 1;
 		}
 		
@@ -88,14 +89,32 @@ public class ConfigWorkbook {
 			ArrayList<String> skills = new ArrayList<String>();
 			String teacherSkill = masterSchedule.getCell(column ,row + teachers.indexOf(teacher)).getContents() ;
 			skills.add(teacherSkill);
-			
-			for(String skill : skills){
-				teacher.addSkill(skill);
+=======
 			}
+			
+			//Add skills to teacher 
+			column = masterSchedule.findCell("Teachable Skill").getColumn();
+			row = masterSchedule.findCell("Teachable Skill").getRow() + 1;
+>>>>>>> parent of 713e7ed... resetMonthlyTally method added to ConfigWorkbook class. Config file moved out of ExcelWorkbook folder.
+			
+			for(Teacher teacher : teachers){
+				ArrayList<String> skills = new ArrayList<String>();
+				String teacherSkill = masterSchedule.getCell(column ,row + teachers.indexOf(teacher)).getContents() ;
+				skills.add(teacherSkill);
+				
+				for(String skill : skills){
+					teacher.addSkill(skill);
+				}
+			}
+<<<<<<< HEAD
 		}
 
 			//Print out teachers , courses, and Period they teach
 			/*
+=======
+			
+			//Print out teachers , courses, and Period they teach
+>>>>>>> parent of 713e7ed... resetMonthlyTally method added to ConfigWorkbook class. Config file moved out of ExcelWorkbook folder.
 			for(Teacher teacher : teachers){
 				System.out.println(teacher.NAME + " Skill:" + teacher.skills);
 				for(Course course : teacher.courses){
@@ -103,40 +122,16 @@ public class ConfigWorkbook {
 				}
 				System.out.println();
 			}
+<<<<<<< HEAD
 			*/
 			return teachers;
+=======
+>>>>>>> parent of 713e7ed... resetMonthlyTally method added to ConfigWorkbook class. Config file moved out of ExcelWorkbook folder.
 	}
 
-	public void resetMonthlyTally()  throws BiffException, IOException, RowsExceededException, WriteException {
-		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
-		tallySheetWritable = wbWritable.getSheet("Tally");	
-		
-		int column = 2;
-		int startingRow = 2;
-		int next = 0;
-		
-		while (! tallySheetWritable.getCell(column , startingRow + next).getContents().equals("")) {
-			System.out.println("Entered the while loop");
-			
-			WritableCell cell;
-			Number resetTally = new Number(column, (startingRow + next), 0);
-			cell = (WritableCell) resetTally;
-			
-			tallySheetWritable.addCell(cell);	
-			next++;
-		}
-		
-		wbWritable.write();
-		wbWritable.close();
-		
-		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
-		wb.close();
-	}
-	
-	public void copySheet() {
+	public void resetMonthlyTally() {
 		
 	}
-
 	public void resetWeeklyTally() {
 		
 	}

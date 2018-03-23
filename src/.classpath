@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="lib" path="/Users/elarkin/Documents/School/Semester3/CS2043/TeamProject/Team5Project/jxl.jar"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
