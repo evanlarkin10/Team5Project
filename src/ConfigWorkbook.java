@@ -106,7 +106,7 @@ public class ConfigWorkbook {
 				for(String skill : skills){
 					teacher.addSkill(skill);
 				}
-			}
+			
 
 
 			for(String skill : skills){
@@ -128,8 +128,8 @@ public class ConfigWorkbook {
 			}
 			*/
 			return teachers;
-
 	}
+	
 
 	public void resetMonthlyTally()  throws BiffException, IOException, RowsExceededException, WriteException {
 		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
