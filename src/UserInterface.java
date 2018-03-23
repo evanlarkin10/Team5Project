@@ -7,6 +7,8 @@ import java.awt.event.*;
 import jxl.Workbook;
 import java.io.IOException;
 import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 public class UserInterface extends JFrame implements ActionListener{
 	private JButton assignButton;
@@ -69,14 +71,25 @@ public class UserInterface extends JFrame implements ActionListener{
 	        }
 		}
 		
-		if(e.getSource()==resetMonthlyTally) {
-			configWorkbook.resetMonthlyTally();
+		if(e.getSource()==resetMonthlyTally){
+				try {
+					configWorkbook.resetMonthlyTally();
+					
+				} catch (BiffException | WriteException | IOException e1) {
+					System.out.println("There's been an issue resetting the Monthly Tally");
+					e1.printStackTrace();
+				}
 		}
 
 		if(e.getSource()==resetWeeklyTally) {
-			configWorkbook.resetWeeklyTally();
+			try {
+				configWorkbook.resetWeeklyTally();
+			} catch (BiffException | WriteException | IOException e1) {
+				System.out.println("There's been an issue resetting the Weekly Tally");
+				e1.printStackTrace();
+			}
 		}
-	       
+
 		}
 	
 	public static void main(String []args) throws Exception{
@@ -114,7 +127,6 @@ public class UserInterface extends JFrame implements ActionListener{
 		ArrayList<Teacher> onCallersP3A = workbook.getSpareList(Period.Period3A, teachers);
 		ArrayList<Teacher> onCallersP3B = workbook.getSpareList(Period.Period3B, teachers);
 		ArrayList<Teacher> onCallersP4 = workbook.getSpareList(Period.Period4, teachers);
-		
 	}
 	
 }
