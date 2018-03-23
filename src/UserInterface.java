@@ -7,25 +7,38 @@ import java.awt.event.*;
 import jxl.Workbook;
 import java.io.IOException;
 import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 public class UserInterface extends JFrame implements ActionListener{
 	private JButton assignButton;
+	private JButton resetWeeklyTally;
+	private JButton resetMonthlyTally;
+	private JButton printFormButton;
 	private JPanel buttonPanel;
 	private JPanel outputPanel;
 	private JLabel label;
+	private Container contentPane;
+	private ConfigWorkbook configWorkbook;
 	
 	public UserInterface() {
 		setSize(600,350);
+		resetWeeklyTally = new JButton("Reset Weekly");
+		resetMonthlyTally = new JButton("Reset Monthly");
 		assignButton = new JButton("Assign On-Calls");
-		assignButton.setSize(200, 80);
+		resetWeeklyTally.setSize(200, 80);
+		resetMonthlyTally.setSize(200, 80);
+		assignButton.setSize(200, 160);
+		resetMonthlyTally.addActionListener(this);
+		resetWeeklyTally.addActionListener(this);
 		assignButton.addActionListener(this);
 		buttonPanel = new JPanel();
+		GridLayout layout = new GridLayout(2,0);
 		buttonPanel.add(assignButton);
 		label = new JLabel("Welcome to the on-call assigner, select the configuration file to begin.");
 		outputPanel = new JPanel();
 		outputPanel.add(label);
-		GridLayout layout = new GridLayout(2,0);
-		Container contentPane = getContentPane();
+		contentPane = getContentPane();
 		contentPane.setLayout(layout);
 		contentPane.add(buttonPanel);
 		contentPane.add(outputPanel);
@@ -57,9 +70,23 @@ public class UserInterface extends JFrame implements ActionListener{
 				}
 	        }
 		}
-	        
-	        
+		
+		if(e.getSource()==resetMonthlyTally){
+				try {
+					configWorkbook.resetMonthlyTally();
+					
+				} catch (BiffException | WriteException | IOException e1) {
+					System.out.println("There's been an issue resetting the Monthly Tally");
+					e1.printStackTrace();
+				}
 		}
+
+		if(e.getSource()==resetWeeklyTally) {
+			configWorkbook.resetWeeklyTally();
+		}
+	       
+		}
+	
 	public static void main(String []args) throws Exception{
 		new UserInterface().setVisible(true);
 		
@@ -67,19 +94,36 @@ public class UserInterface extends JFrame implements ActionListener{
 	}
 	
 	public void initialize(File configFile) throws IOException, BiffException {
+		
+		GridLayout layout = new GridLayout(2,0);
+		JPanel resetPanel = new JPanel();
+		resetPanel.setLayout(layout);
+		resetPanel.add(resetWeeklyTally);
+		resetPanel.add(resetMonthlyTally);
+		buttonPanel.add(resetPanel);
+		printFormButton=new JButton("Print On-Call Forms");
+		buttonPanel.add(printFormButton);
+		contentPane.remove(buttonPanel);
+		contentPane.add(buttonPanel,0);
+		label.setText("Workbook Found");
+		
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-		int numberOfPeriods = 5;
-		int column;
-		int row;
-		int next;
+		
 		
 		//Sets up workbook
 		File src = configFile;
-		Workbook wb = Workbook.getWorkbook(src);
+		ConfigWorkbook workbook = new ConfigWorkbook(configFile);
+		configWorkbook = workbook;
+		teachers = workbook.getTeachers();
 		
-		ConfigWorkbook workbook = new ConfigWorkbook(wb);
-		workbook.getTeachers();
+		//Available On-Callers by period {Note it doesnt check for absents yet}
+		ArrayList<Teacher> onCallersP1 = workbook.getSpareList(Period.Period1, teachers);
+		ArrayList<Teacher> onCallersP2 = workbook.getSpareList(Period.Period2, teachers);
+		ArrayList<Teacher> onCallersP3A = workbook.getSpareList(Period.Period3A, teachers);
+		ArrayList<Teacher> onCallersP3B = workbook.getSpareList(Period.Period3B, teachers);
+		ArrayList<Teacher> onCallersP4 = workbook.getSpareList(Period.Period4, teachers);
 		
 	}
 	
 }
+
