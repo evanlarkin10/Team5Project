@@ -74,16 +74,19 @@ public class UserInterface extends JFrame implements ActionListener{
 		if(e.getSource()==resetMonthlyTally){
 				try {
 					configWorkbook.resetMonthlyTally();
+					resetMonthlyTally.setVisible(false);
 					
 				} catch (BiffException | WriteException | IOException e1) {
 					System.out.println("There's been an issue resetting the Monthly Tally");
 					e1.printStackTrace();
-				}
+				}		
 		}
 
 		if(e.getSource()==resetWeeklyTally) {
 			try {
 				configWorkbook.resetWeeklyTally();
+				resetWeeklyTally.setVisible(false);
+				
 			} catch (BiffException | WriteException | IOException e1) {
 				System.out.println("There's been an issue resetting the Weekly Tally");
 				e1.printStackTrace();
