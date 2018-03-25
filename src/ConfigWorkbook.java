@@ -42,7 +42,9 @@ public class ConfigWorkbook {
 			//Create Teacher Objects from the spreadsheet
 			next = 1;
 			while (! masterSchedule.getCell(column ,row + next).getContents().equals("")){
-				teachers.add(new Teacher(masterSchedule.getCell(column ,row + next).getContents()));
+				teachers.add(new Teacher(masterSchedule.getCell(column ,row + next).getContents(), 
+						masterSchedule.getCell((column + 1), row + next).getContents()));
+				
 				next = next + 1;
 			}
 		
