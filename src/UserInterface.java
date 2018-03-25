@@ -22,6 +22,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	private File fileSelected;
 	private Container contentPane;
 	private ConfigWorkbook configWorkbook;
+	private ConfigWorkbook workbook;
 	
 	public UserInterface() {
 		setSize(600,350);
@@ -94,6 +95,7 @@ public class UserInterface extends JFrame implements ActionListener{
 				e1.printStackTrace();
 			}
 		}
+		
 		if(e.getSource()==assignOnCallsButton) {
 			try {
 				assignOnCalls();
@@ -130,12 +132,14 @@ public class UserInterface extends JFrame implements ActionListener{
 		label.setText("Workbook Found");
 		fileSelected = configFile;
 		
+		//Sets up workbook
+		workbook = new ConfigWorkbook(fileSelected);
+		configWorkbook = workbook;
+		
 	}
 	public void assignOnCalls() throws IOException, BiffException{
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-		//Sets up workbook
-		ConfigWorkbook workbook = new ConfigWorkbook(fileSelected);
-		configWorkbook = workbook;
+
 		teachers = workbook.getTeachers();
 		//Available On-Callers by period {Note it doesnt check for absents yet}
 		ArrayList<Teacher> onCallersP1 = workbook.getSpareList(Period.Period1, teachers);
