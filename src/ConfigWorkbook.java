@@ -75,9 +75,8 @@ public class ConfigWorkbook {
 					}
 
 					courses.add(new Course(masterSchedule.getCell(column + i ,row).getContents(), period ,teacher));
-
 				}
-				
+				row=row+1;
 				for(Course course : courses){
 					teacher.addCourse(course);
 				}
@@ -92,33 +91,12 @@ public class ConfigWorkbook {
 			ArrayList<String> skills = new ArrayList<String>();
 			String teacherSkill = masterSchedule.getCell(column ,row + teachers.indexOf(teacher)).getContents() ;
 			skills.add(teacherSkill);
-
-			}
 			
-			//Add skills to teacher 
-			column = masterSchedule.findCell("Teachable Skill").getColumn();
-			row = masterSchedule.findCell("Teachable Skill").getRow() + 1;
-
-			
-			for(Teacher teacher : teachers){
-				ArrayList<String> skills = new ArrayList<String>();
-				String teacherSkill = masterSchedule.getCell(column ,row + teachers.indexOf(teacher)).getContents() ;
-				skills.add(teacherSkill);
-				
-				for(String skill : skills){
-					teacher.addSkill(skill);
-				}
-			
-
-
 			for(String skill : skills){
 				teacher.addSkill(skill);
 			}
 		}
-			//Print out teachers , courses, and Period they teach
-			/*
-
-			
+						
 			//Print out teachers , courses, and Period they teach
 
 			for(Teacher teacher : teachers){
@@ -128,7 +106,7 @@ public class ConfigWorkbook {
 				}
 				System.out.println();
 			}
-			*/
+			
 			return teachers;
 	}
 	
