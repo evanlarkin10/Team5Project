@@ -7,6 +7,7 @@ public class Teacher {
 	ArrayList<Course> courses = new ArrayList<Course>();
 	String skills = "";
 	String roomNumber;
+	boolean isAvailable = false;
 	
 	public Teacher(String NAME, String roomIn){
 		this.NAME = NAME;
@@ -17,5 +18,13 @@ public class Teacher {
 	public void addCourse(Course course){ courses.add(course); }
 	
 	public void addSkill(String skill){  skills = skills + " " + skill;     }
+	
+	public boolean getAvailability() {
+		return isAvailable;
+	}
+	
+	public void isAvailable() {
+		isAvailable = true;
+	}
 	
 }
