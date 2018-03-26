@@ -137,7 +137,7 @@ public class ConfigWorkbook {
 
 	public void resetMonthlyTally()  throws BiffException, IOException, RowsExceededException, WriteException {
 		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
-		tallySheetWritable = wbWritable.getSheet("Tally");	
+		tallySheetWritable = wbWritable.getSheet("Tally");
 		
 		int column = 2;
 		int startingRow = 2;
@@ -148,7 +148,6 @@ public class ConfigWorkbook {
 			WritableCell cell;
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
-			
 			tallySheetWritable.addCell(cell);	
 			next++;
 		}
@@ -167,7 +166,7 @@ public class ConfigWorkbook {
 		int startingRow = 2;
 		int next = 0;
 		
-		while (! tallySheetWritable.getCell(column , startingRow + next).getContents().equals("")) {			
+		while (!(tallySheetWritable.getCell(column, (startingRow + next)).getContents()).equals("")) {			
 			WritableCell cell;
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
