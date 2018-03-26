@@ -44,7 +44,7 @@ public class ConfigWorkbook {
 			
 			//Create Teacher Objects from the spreadsheet
 			next = 1;
-			while (! masterSchedule.getCell(column ,row + next).getContents().equals("")){
+			while (! masterSchedule.getCell(nameColumn ,row + next).getContents().equals("")){
 				teachers.add(new Teacher(masterSchedule.getCell(nameColumn ,row + next).getContents(),
 						masterSchedule.getCell(roomColumn, row + next).getContents()));
 				next = next + 1;
@@ -76,7 +76,7 @@ public class ConfigWorkbook {
 						break;	
 					}
 
-					courses.add(new Course(masterSchedule.getCell(column + i ,row).getContents(), period ,teacher));
+					courses.add(new Course(masterSchedule.getCell(nameColumn + i ,row).getContents(), period ,teacher));
 
 				}
 				
@@ -87,7 +87,7 @@ public class ConfigWorkbook {
 			}
 		
 		//Add skills to teacher 
-		column = masterSchedule.findCell("Teachable Skill").getColumn();
+		int column = masterSchedule.findCell("Teachable Skill").getColumn();
 		row = masterSchedule.findCell("Teachable Skill").getRow() + 1;
 		
 		for(Teacher teacher : teachers){
