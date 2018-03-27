@@ -226,7 +226,7 @@ public class ConfigWorkbook {
 		for(Teacher teacher : teachers ){
 			for(Course course : teacher.courses){
 				if(course.period.equals(period) && course.courseTitle.equals("Spare")
-						&& (teacher.getAvailability())){
+						&& (teacher.getAvailability(period))){
 					//System.out.println("Period: " + course.courseTitle + " Teacher:" + teacher.NAME);
 					spareTeachers.add(teacher);
 				}
