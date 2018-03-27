@@ -18,8 +18,4 @@ public class Course {
 		isAbsent = in;
 	}
 	
-	public String getCourseName() {
-		return courseTitle;
-	}
-	
 }
