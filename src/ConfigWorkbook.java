@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import jxl.*;
 import jxl.write.*;
+import jxl.format.CellFormat;
 import jxl.write.Number;
 import jxl.write.biff.RowsExceededException;
 import jxl.read.biff.BiffException;
@@ -153,9 +154,11 @@ public class ConfigWorkbook {
 		while (! tallySheetWritable.getCell(column , startingRow + next).getContents().equals("")) {
 			
 			WritableCell cell;
+			CellFormat cf = (tallySheet.getCell(column, (startingRow + next))).getCellFormat();
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
-			tallySheetWritable.addCell(cell);	
+			cell.setCellFormat(cf);
+			tallySheetWritable.addCell(cell);
 			next++;
 		}
 		
@@ -175,9 +178,10 @@ public class ConfigWorkbook {
 		
 		while (!(tallySheetWritable.getCell(column, (startingRow + next)).getContents()).equals("")) {			
 			WritableCell cell;
+			CellFormat cf = (tallySheet.getCell(column, (startingRow + next))).getCellFormat();
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
-			
+			cell.setCellFormat(cf);
 			tallySheetWritable.addCell(cell);	
 			next++;
 		}
