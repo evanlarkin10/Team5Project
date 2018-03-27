@@ -47,6 +47,17 @@ public class ConfigWorkbook {
 			while (! masterSchedule.getCell(nameColumn ,row + next).getContents().equals("")){
 				teachers.add(new Teacher(masterSchedule.getCell(nameColumn ,row + next).getContents(),
 						masterSchedule.getCell(roomColumn, row + next).getContents()));
+				
+				int currentWeeklyTally = Integer.parseInt(tallySheet.getCell(1, row + next).getContents());
+				int currentMonthlyTally = Integer.parseInt(tallySheet.getCell(2, row + next).getContents());
+
+				int currentWeeklyMax = Integer.parseInt(tallySheet.getCell(3, row + next).getContents());
+				int currentMonthlyMax = Integer.parseInt(tallySheet.getCell(4, row + next).getContents());
+				
+				if ((currentWeeklyTally < currentWeeklyMax) && (currentMonthlyTally < currentMonthlyMax)) {
+					teachers.get(next - 1).isAvailable();
+				}
+				
 				next = next + 1;
 			}
 		
@@ -187,7 +198,8 @@ public class ConfigWorkbook {
 		
 		for(Teacher teacher : teachers ){
 			for(Course course : teacher.courses){
-				if(course.period.equals(period) && course.courseTitle.equals("Spare")){
+				if(course.period.equals(period) && course.courseTitle.equals("Spare")
+						&& (teacher.getAvailability())){
 					//System.out.println("Period: " + course.courseTitle + " Teacher:" + teacher.NAME);
 					spareTeachers.add(teacher);
 				}
@@ -196,5 +208,4 @@ public class ConfigWorkbook {
 		return spareTeachers;
 	}
 			
-	
 }
