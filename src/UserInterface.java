@@ -1,6 +1,8 @@
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
@@ -41,8 +43,9 @@ public class UserInterface extends JFrame implements ActionListener{
 		label = new JLabel("Welcome to the on-call assigner, select the configuration file to begin.");
 		outputPanel = new JPanel();
 		outputPanel.add(label);
+		outputPanel.setLayout(new BorderLayout());
 		contentPane = getContentPane();
-		contentPane.setLayout(layout);
+		contentPane.setLayout(new FlowLayout());
 		contentPane.add(buttonPanel);
 		contentPane.add(outputPanel);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -141,7 +144,31 @@ public class UserInterface extends JFrame implements ActionListener{
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 
 		teachers = workbook.getTeachers();
-		//Available On-Callers by period {Note it doesnt check for absents yet}
+		Scheduler scheduleOnCalls = new Scheduler(workbook);
+		
+		String p1Report = scheduleOnCalls.assignOnCallsP1();
+		String p2Report = scheduleOnCalls.assignOnCallsP2();
+		String p3AReport = scheduleOnCalls.assignOnCallsP3A();
+		String p3BReport = scheduleOnCalls.assignOnCallsP3B();
+		String p4Report = scheduleOnCalls.assignOnCallsP4();
+		System.out.println(p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report);
+		String report = p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report;
+		JTextArea reportArea = new JTextArea(report);
+		JPanel reportPanel = new JPanel();
+		reportPanel.setLayout(new BorderLayout());
+		reportPanel.add(reportArea);
+		reportPanel.setBorder(new EmptyBorder(10,10,10,10));
+		reportPanel.setSize(100, 100);
+		JScrollPane scrollPane = new JScrollPane(reportPanel);
+		outputPanel.removeAll();
+		outputPanel.setLayout(new GridLayout(2,2));
+		outputPanel.add(scrollPane,0,0);
+		contentPane.remove(outputPanel);
+		contentPane.add(outputPanel);
+		setVisible(true);
+		
+		/*
+		//Available On-Callers by period
 		ArrayList<Teacher> onCallersP1 = workbook.getSpareList(Period.Period1, teachers);
 		ArrayList<Teacher> onCallersP2 = workbook.getSpareList(Period.Period2, teachers);
 		ArrayList<Teacher> onCallersP3A = workbook.getSpareList(Period.Period3A, teachers);
@@ -155,6 +182,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		ArrayList<Teacher> absentP3B = workbook.getAbsencesByPeriod(Period.Period3B, teachers);
 		ArrayList<Teacher> absentP4 = workbook.getAbsencesByPeriod(Period.Period4, teachers); 
 		 
+		 */
 		
 		
 	}

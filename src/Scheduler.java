@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.io.File;
 
 public class Scheduler {
@@ -13,7 +15,7 @@ public class Scheduler {
 	ArrayList<Teacher> spareList3A;
 	ArrayList<Teacher> spareList3B;
 	ArrayList<Teacher> spareList4;
-	Config Workbook configWB;
+	ConfigWorkbook configWB;
 	
 	//Constructor
 	public Scheduler(ConfigWorkbook wbIn){
@@ -31,8 +33,76 @@ public class Scheduler {
 		spareList4 = configWB.getSpareList(Period.Period4, teacherList);
 	}
 	
-	public void assignOnCalls() {
-		
+	public String assignOnCallsP1() {
+		String report = "";
+		Iterator<Teacher> itr = spareList1.iterator();
+		for(Teacher absentee: absenceList1) {
+			if(itr.hasNext()) {
+				report += getOnCallRecord(Period.Period1, absentee, itr.next()) + "\n";
+			}
+			else {
+				report += "No on caller found for: " + Period.Period1 + " " + absentee.NAME+ "\n";
+			}
+		}
+		return report;
+	}
+	public String assignOnCallsP2() {
+		String report = "";
+		Iterator<Teacher> itr = spareList2.iterator();
+		for(Teacher absentee: absenceList2) {
+			if(itr.hasNext()) {
+				report += getOnCallRecord(Period.Period2, absentee, itr.next()) + "\n";
+			}
+			else {
+				report += "No on caller found for: " + Period.Period2 + " " + absentee.NAME+ "\n";
+			}
+		}
+		return report;
+	}
+	public String assignOnCallsP3A() {
+		String report = "";
+		Iterator<Teacher> itr = spareList3A.iterator();
+		for(Teacher absentee: absenceList3A) {
+			if(itr.hasNext()) {
+				report += getOnCallRecord(Period.Period3A, absentee, itr.next()) + "\n";
+			}
+			else {
+				report += "No on caller found for: " + Period.Period3A + " " + absentee.NAME+ "\n";
+			}
+		}
+		return report;
+	}
+	public String assignOnCallsP3B() {
+		String report = "";
+		Iterator<Teacher> itr = spareList3B.iterator();
+		for(Teacher absentee: absenceList3B) {
+			if(itr.hasNext()) {
+				report += getOnCallRecord(Period.Period3B, absentee, itr.next()) + "\n";
+			}
+			else {
+				report += "No on caller found for: " + Period.Period3B + " " + absentee.NAME+ "\n";
+			}
+		}
+		return report;
+	}
+	public String assignOnCallsP4() {
+		String report = "";
+		Iterator<Teacher> itr = spareList4.iterator();
+		for(Teacher absentee: absenceList4) {
+			if(itr.hasNext()) {
+				report += getOnCallRecord(Period.Period4, absentee, itr.next()) + "\n";
+			}
+			else {
+				report += "No on caller found for: " + Period.Period4 + " " + absentee.NAME+ "\n";
+			}
+		}
+		return report;
+	}
+	
+	public String getOnCallRecord(Period period, Teacher teacher, Teacher sub) {
+		String record = "";
+		record = period + "\t\tAbsentee:" + teacher.NAME + "\t\t Sub:" + sub.NAME+ "\n";
+		return record;
 	}
 	
 	

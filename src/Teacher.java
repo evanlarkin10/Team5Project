@@ -28,6 +28,23 @@ public class Teacher {
 	public boolean getAvailability() {
 		return isAvailable;
 	}
+	public boolean getAvailability(Period period) {
+		if(period == Period.Period1) 
+			return isAvailableP1;
+		
+		else if(period == Period.Period2) 
+			return isAvailableP2;
+		
+		else if(period == Period.Period3A) 
+			return isAvailableP3A;
+		
+		else if(period == Period.Period3B) 
+			return isAvailableP3B;
+		
+		else
+			return isAvailableP4;
+		
+	}
 	
 	public void isAvailable() {
 		isAvailable  = true;
