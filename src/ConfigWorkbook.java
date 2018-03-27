@@ -7,6 +7,7 @@ import java.util.Arrays;
 import jxl.*;
 import jxl.write.*;
 import jxl.format.CellFormat;
+import jxl.format.Colour;
 import jxl.write.Number;
 import jxl.write.biff.RowsExceededException;
 import jxl.read.biff.BiffException;
@@ -350,20 +351,40 @@ public class ConfigWorkbook {
 			
 			return dayOfWeek;
 	}
+	
+	public void turnCellRed(Period period, String teacherName) throws WriteException, IOException, BiffException {
+		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
+		WritableSheet absenceScheduleWritable = wbWritable.getSheet("Week X");	
+		WritableCell cell = absenceScheduleWritable.getWritableCell(0, 0);
+		
+		int column = absenceSchedule.findCell(getDayOfWeek()).getColumn();
+		int row = absenceSchedule.findCell(teacherName).getRow();
+		
+		
+		if (period == Period.Period1) {
+			cell = absenceScheduleWritable.getWritableCell(column, row);
+		}
+		else if (period == Period.Period2) {
+			cell = absenceScheduleWritable.getWritableCell(column + 1, row);
+		}
+		else if (period == Period.Period3A) {
+			cell = absenceScheduleWritable.getWritableCell(column + 2, row);
+		}
+		else if (period == Period.Period3B) {
+			cell = absenceScheduleWritable.getWritableCell(column + 3, row);
+		}
+		else if (period == Period.Period4) {
+			cell = absenceScheduleWritable.getWritableCell(column + 4, row);
+		}
+
+		WritableCellFormat newFormat = new WritableCellFormat();
+		newFormat.setBackground(Colour.RED);
+		cell.setCellFormat(newFormat);
+		
+		wbWritable.write();
+		wbWritable.close();
+		
+		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
+	}
 			
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

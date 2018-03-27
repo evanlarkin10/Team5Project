@@ -106,6 +106,9 @@ public class UserInterface extends JFrame implements ActionListener{
 				e1.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
+			} catch (WriteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
 	}
@@ -140,7 +143,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		configWorkbook = workbook;
 		
 	}
-	public void assignOnCalls() throws IOException, BiffException{
+	public void assignOnCalls() throws IOException, BiffException, WriteException{
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 
 		teachers = workbook.getTeachers();
