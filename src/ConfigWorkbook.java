@@ -386,5 +386,4 @@ public class ConfigWorkbook {
 		
 		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
 	}
-			
 }

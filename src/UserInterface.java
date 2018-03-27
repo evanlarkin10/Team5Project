@@ -27,7 +27,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	private ConfigWorkbook workbook;
 	
 	public UserInterface() {
-		setSize(600,350);
+		setSize(600,600);
 		resetWeeklyTally = new JButton("Reset Weekly");
 		resetMonthlyTally = new JButton("Reset Monthly");
 		chooseFileButton = new JButton("Select Configuration File");
