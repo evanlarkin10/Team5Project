@@ -11,13 +11,15 @@ import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
 public class UserInterface extends JFrame implements ActionListener{
-	private JButton assignButton;
+	private JButton chooseFileButton;
+	private JButton assignOnCallsButton;
 	private JButton resetWeeklyTally;
 	private JButton resetMonthlyTally;
 	private JButton printFormButton;
 	private JPanel buttonPanel;
 	private JPanel outputPanel;
 	private JLabel label;
+	private File fileSelected;
 	private Container contentPane;
 	private ConfigWorkbook configWorkbook;
 	
@@ -25,16 +27,16 @@ public class UserInterface extends JFrame implements ActionListener{
 		setSize(600,350);
 		resetWeeklyTally = new JButton("Reset Weekly");
 		resetMonthlyTally = new JButton("Reset Monthly");
-		assignButton = new JButton("Assign On-Calls");
+		chooseFileButton = new JButton("Select Configuration File");
 		resetWeeklyTally.setSize(200, 80);
 		resetMonthlyTally.setSize(200, 80);
-		assignButton.setSize(200, 160);
+		chooseFileButton.setSize(200, 160);
 		resetMonthlyTally.addActionListener(this);
 		resetWeeklyTally.addActionListener(this);
-		assignButton.addActionListener(this);
+		chooseFileButton.addActionListener(this);
 		buttonPanel = new JPanel();
 		GridLayout layout = new GridLayout(2,0);
-		buttonPanel.add(assignButton);
+		buttonPanel.add(chooseFileButton);
 		label = new JLabel("Welcome to the on-call assigner, select the configuration file to begin.");
 		outputPanel = new JPanel();
 		outputPanel.add(label);
@@ -46,7 +48,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent e){
-		if(e.getSource()==assignButton) {
+		if(e.getSource()==chooseFileButton) {
 			final JFileChooser fc = new JFileChooser();
 			
 			FileNameExtensionFilter excel = new FileNameExtensionFilter(
@@ -74,23 +76,34 @@ public class UserInterface extends JFrame implements ActionListener{
 		if(e.getSource()==resetMonthlyTally){
 				try {
 					configWorkbook.resetMonthlyTally();
+					resetMonthlyTally.setVisible(false);
 					
 				} catch (BiffException | WriteException | IOException e1) {
 					System.out.println("There's been an issue resetting the Monthly Tally");
 					e1.printStackTrace();
-				}
+				}		
 		}
 
 		if(e.getSource()==resetWeeklyTally) {
 			try {
 				configWorkbook.resetWeeklyTally();
+				resetWeeklyTally.setVisible(false);
+				
 			} catch (BiffException | WriteException | IOException e1) {
 				System.out.println("There's been an issue resetting the Weekly Tally");
 				e1.printStackTrace();
 			}
 		}
-
+		if(e.getSource()==assignOnCallsButton) {
+			try {
+				assignOnCalls();
+			} catch (BiffException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
+	}
 	
 	public static void main(String []args) throws Exception{
 		new UserInterface().setVisible(true);
@@ -102,22 +115,26 @@ public class UserInterface extends JFrame implements ActionListener{
 		
 		GridLayout layout = new GridLayout(2,0);
 		JPanel resetPanel = new JPanel();
+		assignOnCallsButton = new JButton("Assign On Calls");
+		assignOnCallsButton.addActionListener(this);
 		resetPanel.setLayout(layout);
 		resetPanel.add(resetWeeklyTally);
 		resetPanel.add(resetMonthlyTally);
 		buttonPanel.add(resetPanel);
 		printFormButton=new JButton("Print On-Call Forms");
 		buttonPanel.add(printFormButton);
+		buttonPanel.remove(chooseFileButton);
+		buttonPanel.add(assignOnCallsButton,0);
 		contentPane.remove(buttonPanel);
 		contentPane.add(buttonPanel,0);
 		label.setText("Workbook Found");
+		fileSelected = configFile;
 		
+	}
+	public void assignOnCalls() throws IOException, BiffException{
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-		
-		
 		//Sets up workbook
-		File src = configFile;
-		ConfigWorkbook workbook = new ConfigWorkbook(configFile);
+		ConfigWorkbook workbook = new ConfigWorkbook(fileSelected);
 		configWorkbook = workbook;
 		teachers = workbook.getTeachers();
 		
@@ -128,6 +145,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		ArrayList<Teacher> onCallersP3B = workbook.getSpareList(Period.Period3B, teachers);
 		ArrayList<Teacher> onCallersP4 = workbook.getSpareList(Period.Period4, teachers);
 	}
+	
 	
 }
 
