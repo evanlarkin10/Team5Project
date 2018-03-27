@@ -14,6 +14,10 @@ public class Course {
 		this.regularTeacher = regularTeacher;
 	}
 	
+	public String getCourseName() {
+		return courseTitle;
+	}
+	
 	public void setIsAbsent(boolean in) {
 		isAbsent = in;
 	}
