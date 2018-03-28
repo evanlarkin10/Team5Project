@@ -119,6 +119,7 @@ public class Scheduler {
 		String room = configWB.getRoomNumber(teacher.NAME);
 		
 		onCallBook.addCoverageToOverview(teacher.NAME, sub.NAME, course, period.toString(), room);
+		onCallBook.newOnCallSheet(teacher.NAME, sub.NAME, course, period.toString(), room);
 		return record;
 	}
 	

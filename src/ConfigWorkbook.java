@@ -246,31 +246,31 @@ public class ConfigWorkbook {
 		
 		if(period.equals(Period.Period1)){
 			 for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP1){
+				 if((!teacher.isAvailableP1)){
 					 absentTeachers.add(teacher);
-				 }
+				 }				 
 			 }
 		}else if(period.equals(Period.Period2)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP2){
+				 if((!teacher.isAvailableP2)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else if(period.equals(Period.Period3A)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP3A){
+				 if((!teacher.isAvailableP3A)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else if(period.equals(Period.Period3B)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP3B){
+				 if((!teacher.isAvailableP3B)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else{
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP4){
+				 if((!teacher.isAvailableP4)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
@@ -290,10 +290,26 @@ public class ConfigWorkbook {
 			for(Teacher teacher : teachers){
 				column = absenceSchedule.findCell(getDayOfWeek()).getColumn();
 				row = absenceSchedule.findCell(teacher.NAME).getRow();
+				Period period;
 				
 				for(int i = 0; i < Period.values().length; i++ ){
+					if (i == 0){
+						period = Period.Period1;
+					}
+					else if (i == 1){
+						period = Period.Period2;
+					}
+					else if (i == 2){
+						period = Period.Period3A;
+					}
+					else if (i == 3){
+						period = Period.Period3B;
+					}
+					else {
+						period = Period.Period4;
+					}
 					String contents = absenceSchedule.getCell(column + i, row).getContents();
-					if(contents.equalsIgnoreCase("x")){
+					if(contents.equalsIgnoreCase("x") && !(getCourseName(teacher.NAME, period) == "Spare")){
 						switch(i) { 
 						case 0:
 							teacher.isAvailableP1 = false;
