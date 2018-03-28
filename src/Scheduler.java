@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,9 +22,11 @@ public class Scheduler {
 	ArrayList<Teacher> spareList3B;
 	ArrayList<Teacher> spareList4;
 	ConfigWorkbook configWB;
+	OnCallWorkbook onCallBook;
 	
 	//Constructor
-	public Scheduler(ConfigWorkbook wbIn){
+	public Scheduler(ConfigWorkbook wbIn) throws BiffException, WriteException, IOException{
+		onCallBook = new OnCallWorkbook();
 		configWB = wbIn;
 		teacherList = configWB.getTeachers();
 		absenceList1 = configWB.getAbsencesByPeriod(Period.Period1, teacherList);
@@ -109,12 +112,15 @@ public class Scheduler {
 		return report;
 	}
 	
-	public String getOnCallRecord(Period period, Teacher teacher, Teacher sub) {
+	public String getOnCallRecord(Period period, Teacher teacher, Teacher sub) throws RowsExceededException, WriteException, IOException, BiffException {
 		String record = "";
 		record = period + "\t\tAbsentee:" + teacher.NAME + "\t\t Sub:" + sub.NAME+ "\n";
+		String course = configWB.getCourseName(teacher.NAME, period);
+		String room = configWB.getRoomNumber(teacher.NAME);
+		
+		onCallBook.addCoverageToOverview(teacher.NAME, sub.NAME, course, period.toString(), room);
 		return record;
 	}
-	
 	
 }
 

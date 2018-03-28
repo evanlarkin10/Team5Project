@@ -386,4 +386,26 @@ public class ConfigWorkbook {
 		
 		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
 	}
+	
+	public String getCourseName(String Teacher, Period period) {
+		String course = "";
+		
+		int column = masterSchedule.findCell(period.name()).getColumn();
+		int row = masterSchedule.findCell(Teacher).getRow();
+		
+		course = masterSchedule.getCell(column, row).getContents();
+		return course;
+	}
+	
+	public String getRoomNumber(String Teacher) {
+		String roomNumber = "";
+		
+		int column = 1;
+		int row = masterSchedule.findCell(Teacher).getRow();
+		
+		roomNumber = masterSchedule.getCell(column, row).getContents();
+		return roomNumber;
+	}
+	
+	
 }

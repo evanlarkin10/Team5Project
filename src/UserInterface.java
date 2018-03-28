@@ -154,6 +154,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		String p3AReport = scheduleOnCalls.assignOnCallsP3A();
 		String p3BReport = scheduleOnCalls.assignOnCallsP3B();
 		String p4Report = scheduleOnCalls.assignOnCallsP4();
+		
 		System.out.println(p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report);
 		String report = p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report;
 		JTextArea reportArea = new JTextArea(report);
