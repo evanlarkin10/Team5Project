@@ -27,7 +27,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	private ConfigWorkbook workbook;
 	
 	public UserInterface() {
-		setSize(600,350);
+		setSize(600,600);
 		resetWeeklyTally = new JButton("Reset Weekly");
 		resetMonthlyTally = new JButton("Reset Monthly");
 		chooseFileButton = new JButton("Select Configuration File");
@@ -106,6 +106,9 @@ public class UserInterface extends JFrame implements ActionListener{
 				e1.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
+			} catch (WriteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
 	}
@@ -140,7 +143,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		configWorkbook = workbook;
 		
 	}
-	public void assignOnCalls() throws IOException, BiffException{
+	public void assignOnCalls() throws IOException, BiffException, WriteException{
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 
 		teachers = workbook.getTeachers();
@@ -151,6 +154,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		String p3AReport = scheduleOnCalls.assignOnCallsP3A();
 		String p3BReport = scheduleOnCalls.assignOnCallsP3B();
 		String p4Report = scheduleOnCalls.assignOnCallsP4();
+		
 		System.out.println(p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report);
 		String report = p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report;
 		JTextArea reportArea = new JTextArea(report);

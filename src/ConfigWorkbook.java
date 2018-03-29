@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import jxl.*;
 import jxl.write.*;
+import jxl.format.CellFormat;
+import jxl.format.Colour;
 import jxl.write.Number;
 import jxl.write.biff.RowsExceededException;
 import jxl.read.biff.BiffException;
@@ -153,9 +155,11 @@ public class ConfigWorkbook {
 		while (! tallySheetWritable.getCell(column , startingRow + next).getContents().equals("")) {
 			
 			WritableCell cell;
+			CellFormat cf = (tallySheet.getCell(column, (startingRow + next))).getCellFormat();
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
-			tallySheetWritable.addCell(cell);	
+			cell.setCellFormat(cf);
+			tallySheetWritable.addCell(cell);
 			next++;
 		}
 		
@@ -175,9 +179,10 @@ public class ConfigWorkbook {
 		
 		while (!(tallySheetWritable.getCell(column, (startingRow + next)).getContents()).equals("")) {			
 			WritableCell cell;
+			CellFormat cf = (tallySheet.getCell(column, (startingRow + next))).getCellFormat();
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
-			
+			cell.setCellFormat(cf);
 			tallySheetWritable.addCell(cell);	
 			next++;
 		}
@@ -241,31 +246,31 @@ public class ConfigWorkbook {
 		
 		if(period.equals(Period.Period1)){
 			 for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP1){
+				 if((!teacher.isAvailableP1)){
 					 absentTeachers.add(teacher);
-				 }
+				 }				 
 			 }
 		}else if(period.equals(Period.Period2)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP2){
+				 if((!teacher.isAvailableP2)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else if(period.equals(Period.Period3A)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP3A){
+				 if((!teacher.isAvailableP3A)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else if(period.equals(Period.Period3B)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP3B){
+				 if((!teacher.isAvailableP3B)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else{
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP4){
+				 if((!teacher.isAvailableP4)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
@@ -285,10 +290,26 @@ public class ConfigWorkbook {
 			for(Teacher teacher : teachers){
 				column = absenceSchedule.findCell(getDayOfWeek()).getColumn();
 				row = absenceSchedule.findCell(teacher.NAME).getRow();
+				Period period;
 				
 				for(int i = 0; i < Period.values().length; i++ ){
+					if (i == 0){
+						period = Period.Period1;
+					}
+					else if (i == 1){
+						period = Period.Period2;
+					}
+					else if (i == 2){
+						period = Period.Period3A;
+					}
+					else if (i == 3){
+						period = Period.Period3B;
+					}
+					else {
+						period = Period.Period4;
+					}
 					String contents = absenceSchedule.getCell(column + i, row).getContents();
-					if(contents.equalsIgnoreCase("x")){
+					if(contents.equalsIgnoreCase("x") && !(getCourseName(teacher.NAME, period) == "Spare")){
 						switch(i) { 
 						case 0:
 							teacher.isAvailableP1 = false;
@@ -346,20 +367,61 @@ public class ConfigWorkbook {
 			
 			return dayOfWeek;
 	}
-			
+	
+	public void turnCellRed(Period period, String teacherName) throws WriteException, IOException, BiffException {
+		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
+		WritableSheet absenceScheduleWritable = wbWritable.getSheet("Week X");	
+		WritableCell cell = absenceScheduleWritable.getWritableCell(0, 0);
+		
+		int column = absenceSchedule.findCell(getDayOfWeek()).getColumn();
+		int row = absenceSchedule.findCell(teacherName).getRow();
+		
+		
+		if (period == Period.Period1) {
+			cell = absenceScheduleWritable.getWritableCell(column, row);
+		}
+		else if (period == Period.Period2) {
+			cell = absenceScheduleWritable.getWritableCell(column + 1, row);
+		}
+		else if (period == Period.Period3A) {
+			cell = absenceScheduleWritable.getWritableCell(column + 2, row);
+		}
+		else if (period == Period.Period3B) {
+			cell = absenceScheduleWritable.getWritableCell(column + 3, row);
+		}
+		else if (period == Period.Period4) {
+			cell = absenceScheduleWritable.getWritableCell(column + 4, row);
+		}
+
+		WritableCellFormat newFormat = new WritableCellFormat();
+		newFormat.setBackground(Colour.RED);
+		cell.setCellFormat(newFormat);
+		
+		wbWritable.write();
+		wbWritable.close();
+		
+		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
+	}
+	
+	public String getCourseName(String Teacher, Period period) {
+		String course = "";
+		
+		int column = masterSchedule.findCell(period.name()).getColumn();
+		int row = masterSchedule.findCell(Teacher).getRow();
+		
+		course = masterSchedule.getCell(column, row).getContents();
+		return course;
+	}
+	
+	public String getRoomNumber(String Teacher) {
+		String roomNumber = "";
+		
+		int column = 1;
+		int row = masterSchedule.findCell(Teacher).getRow();
+		
+		roomNumber = masterSchedule.getCell(column, row).getContents();
+		return roomNumber;
+	}
+	
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

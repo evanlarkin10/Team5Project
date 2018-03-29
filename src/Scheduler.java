@@ -1,7 +1,13 @@
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
+
 import java.io.File;
+import java.io.IOException;
 
 public class Scheduler {
 	ArrayList<Teacher> teacherList;
@@ -16,9 +22,11 @@ public class Scheduler {
 	ArrayList<Teacher> spareList3B;
 	ArrayList<Teacher> spareList4;
 	ConfigWorkbook configWB;
+	OnCallWorkbook onCallBook;
 	
 	//Constructor
-	public Scheduler(ConfigWorkbook wbIn){
+	public Scheduler(ConfigWorkbook wbIn) throws BiffException, WriteException, IOException{
+		onCallBook = new OnCallWorkbook();
 		configWB = wbIn;
 		teacherList = configWB.getTeachers();
 		absenceList1 = configWB.getAbsencesByPeriod(Period.Period1, teacherList);
@@ -33,7 +41,7 @@ public class Scheduler {
 		spareList4 = configWB.getSpareList(Period.Period4, teacherList);
 	}
 	
-	public String assignOnCallsP1() {
+	public String assignOnCallsP1() throws WriteException, BiffException, IOException {
 		String report = "";
 		Iterator<Teacher> itr = spareList1.iterator();
 		for(Teacher absentee: absenceList1) {
@@ -42,11 +50,12 @@ public class Scheduler {
 			}
 			else {
 				report += "No on caller found for: " + Period.Period1 + " " + absentee.NAME+ "\n";
+				configWB.turnCellRed(Period.Period1, absentee.NAME);
 			}
 		}
 		return report;
 	}
-	public String assignOnCallsP2() {
+	public String assignOnCallsP2() throws WriteException, BiffException, IOException {
 		String report = "";
 		Iterator<Teacher> itr = spareList2.iterator();
 		for(Teacher absentee: absenceList2) {
@@ -55,11 +64,12 @@ public class Scheduler {
 			}
 			else {
 				report += "No on caller found for: " + Period.Period2 + " " + absentee.NAME+ "\n";
+				configWB.turnCellRed(Period.Period2, absentee.NAME);
 			}
 		}
 		return report;
 	}
-	public String assignOnCallsP3A() {
+	public String assignOnCallsP3A() throws WriteException, BiffException, IOException {
 		String report = "";
 		Iterator<Teacher> itr = spareList3A.iterator();
 		for(Teacher absentee: absenceList3A) {
@@ -68,11 +78,12 @@ public class Scheduler {
 			}
 			else {
 				report += "No on caller found for: " + Period.Period3A + " " + absentee.NAME+ "\n";
+				configWB.turnCellRed(Period.Period3A, absentee.NAME);
 			}
 		}
 		return report;
 	}
-	public String assignOnCallsP3B() {
+	public String assignOnCallsP3B() throws WriteException, BiffException, IOException {
 		String report = "";
 		Iterator<Teacher> itr = spareList3B.iterator();
 		for(Teacher absentee: absenceList3B) {
@@ -81,11 +92,12 @@ public class Scheduler {
 			}
 			else {
 				report += "No on caller found for: " + Period.Period3B + " " + absentee.NAME+ "\n";
+				configWB.turnCellRed(Period.Period3B, absentee.NAME);
 			}
 		}
 		return report;
 	}
-	public String assignOnCallsP4() {
+	public String assignOnCallsP4() throws WriteException, BiffException, IOException {
 		String report = "";
 		Iterator<Teacher> itr = spareList4.iterator();
 		for(Teacher absentee: absenceList4) {
@@ -94,17 +106,22 @@ public class Scheduler {
 			}
 			else {
 				report += "No on caller found for: " + Period.Period4 + " " + absentee.NAME+ "\n";
+				configWB.turnCellRed(Period.Period4, absentee.NAME);
 			}
 		}
 		return report;
 	}
 	
-	public String getOnCallRecord(Period period, Teacher teacher, Teacher sub) {
+	public String getOnCallRecord(Period period, Teacher teacher, Teacher sub) throws RowsExceededException, WriteException, IOException, BiffException {
 		String record = "";
 		record = period + "\t\tAbsentee:" + teacher.NAME + "\t\t Sub:" + sub.NAME+ "\n";
+		String course = configWB.getCourseName(teacher.NAME, period);
+		String room = configWB.getRoomNumber(teacher.NAME);
+		
+		onCallBook.addCoverageToOverview(teacher.NAME, sub.NAME, course, period.toString(), room);
+		onCallBook.newOnCallSheet(teacher.NAME, sub.NAME, course, period.toString(), room);
 		return record;
 	}
-	
 	
 }
 
