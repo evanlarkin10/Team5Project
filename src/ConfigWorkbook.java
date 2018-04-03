@@ -193,6 +193,37 @@ public class ConfigWorkbook {
 		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
 	}
 	
+	public void incrementTally(String teacherName)  throws BiffException, IOException, RowsExceededException, WriteException {
+		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
+		tallySheetWritable = wbWritable.getSheet("Tally");	
+
+		int row = tallySheetWritable.findCell(teacherName).getRow();
+		int currentWeeklyTally = Integer.parseInt(tallySheetWritable.getCell(1, row).getContents());
+		int currentMonthlyTally = Integer.parseInt(tallySheetWritable.getCell(2, row).getContents());
+				
+		WritableCell weeklyCell;
+		WritableCell monthlyCell;
+		
+		CellFormat cf = (tallySheet.getCell(1, row)).getCellFormat();
+		
+		Number incrementedWeeklyTally = new Number(1, row, currentWeeklyTally + 1);
+		Number incrementedMonthlyTally = new Number(2, row, currentMonthlyTally + 1);
+		
+		weeklyCell = (WritableCell) incrementedWeeklyTally;
+		monthlyCell = (WritableCell) incrementedMonthlyTally;
+		
+		weeklyCell.setCellFormat(cf);
+		monthlyCell.setCellFormat(cf);
+		tallySheetWritable.addCell(weeklyCell);
+		tallySheetWritable.addCell(monthlyCell);
+		
+		
+		wbWritable.write();
+		wbWritable.close();
+		
+		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
+	}
+	
 	public void writeSkills(String skills, int col, int row)  throws BiffException, IOException, RowsExceededException, WriteException{
 		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
 		skillSheetWritable = wbWritable.getSheet("Master Schedule");	
@@ -309,7 +340,7 @@ public class ConfigWorkbook {
 						period = Period.Period4;
 					}
 					String contents = absenceSchedule.getCell(column + i, row).getContents();
-					if(contents.equalsIgnoreCase("x") && !(getCourseName(teacher.NAME, period) == "Spare")){
+					if(contents.equalsIgnoreCase("x") && !(getCourseName(teacher.NAME, period).equalsIgnoreCase("Spare"))){
 						switch(i) { 
 						case 0:
 							teacher.isAvailableP1 = false;

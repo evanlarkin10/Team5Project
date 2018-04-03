@@ -118,6 +118,7 @@ public class Scheduler {
 		String course = configWB.getCourseName(teacher.NAME, period);
 		String room = configWB.getRoomNumber(teacher.NAME);
 		
+		configWB.incrementTally(sub.NAME);
 		onCallBook.addCoverageToOverview(teacher.NAME, sub.NAME, course, period.toString(), room);
 		onCallBook.newOnCallSheet(teacher.NAME, sub.NAME, course, period.toString(), room);
 		return record;
