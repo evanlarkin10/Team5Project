@@ -309,7 +309,7 @@ public class ConfigWorkbook {
 						period = Period.Period4;
 					}
 					String contents = absenceSchedule.getCell(column + i, row).getContents();
-					if(contents.equalsIgnoreCase("x") && !(getCourseName(teacher.NAME, period) == "Spare")){
+					if(contents.equalsIgnoreCase("x") && !(getCourseName(teacher.NAME, period).equalsIgnoreCase("Spare"))){
 						switch(i) { 
 						case 0:
 							teacher.isAvailableP1 = false;
