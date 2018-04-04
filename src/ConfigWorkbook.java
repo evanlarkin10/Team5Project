@@ -59,9 +59,9 @@ public class ConfigWorkbook {
 
 				int currentWeeklyMax = Integer.parseInt(tallySheet.getCell(3, row + next).getContents());
 				int currentMonthlyMax = Integer.parseInt(tallySheet.getCell(4, row + next).getContents());
-				
+				System.out.print(currentWeeklyTally + " " + currentWeeklyMax + " " + currentMonthlyTally + " " + currentMonthlyMax);
 				if ((currentWeeklyTally < currentWeeklyMax) && (currentMonthlyTally < currentMonthlyMax)) {
-					teachers.get(next - 1).isAvailable();
+					teachers.get(next - 1).setIsUnderLimit();
 				}
 				
 				next = next + 1;
@@ -365,7 +365,7 @@ public class ConfigWorkbook {
 		}
 
 	}
-	
+
 	//returns the numeric day of the week - to be used inside assignOnCalls
 	private String getDayOfWeek() {
 			Calendar calendar = Calendar.getInstance();
@@ -426,6 +426,40 @@ public class ConfigWorkbook {
 
 		WritableCellFormat newFormat = new WritableCellFormat();
 		newFormat.setBackground(Colour.RED);
+		cell.setCellFormat(newFormat);
+		
+		wbWritable.write();
+		wbWritable.close();
+		
+		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
+	}
+	public void turnCellGreen(Period period, String teacherName) throws WriteException, IOException, BiffException {
+		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
+		WritableSheet absenceScheduleWritable = wbWritable.getSheet("Week X");	
+		WritableCell cell = absenceScheduleWritable.getWritableCell(0, 0);
+		
+		int column = absenceSchedule.findCell(getDayOfWeek()).getColumn();
+		int row = absenceSchedule.findCell(teacherName).getRow();
+		
+		
+		if (period == Period.Period1) {
+			cell = absenceScheduleWritable.getWritableCell(column, row);
+		}
+		else if (period == Period.Period2) {
+			cell = absenceScheduleWritable.getWritableCell(column + 1, row);
+		}
+		else if (period == Period.Period3A) {
+			cell = absenceScheduleWritable.getWritableCell(column + 2, row);
+		}
+		else if (period == Period.Period3B) {
+			cell = absenceScheduleWritable.getWritableCell(column + 3, row);
+		}
+		else if (period == Period.Period4) {
+			cell = absenceScheduleWritable.getWritableCell(column + 4, row);
+		}
+
+		WritableCellFormat newFormat = new WritableCellFormat();
+		newFormat.setBackground(Colour.GREEN);
 		cell.setCellFormat(newFormat);
 		
 		wbWritable.write();

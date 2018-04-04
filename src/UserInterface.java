@@ -54,7 +54,17 @@ public class UserInterface extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource()==chooseFileButton) {
 			final JFileChooser fc = new JFileChooser();
+			File workingDirectory = new File(System.getProperty("user.dir"));
+			/*If want to open file chooser to directory before /src
+			String[] directory = workingDirectory.toString().split("/");
+			String directoryToFile = "";
+			for(int i=0;i<directory.length-1;i++) {
+				directoryToFile += directory[i] + "/";
+			}
 			
+			workingDirectory = new File(directoryToFile);
+			*/
+			fc.setCurrentDirectory(workingDirectory);
 			FileNameExtensionFilter excel = new FileNameExtensionFilter(
 				     "Excel only", "xlsx", "xls");
 			fc.setFileFilter(excel);
@@ -110,6 +120,9 @@ public class UserInterface extends JFrame implements ActionListener{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		}
+		if(e.getSource()==printFormButton) {
+			JOptionPane.showMessageDialog(null, "On Call forms were generated and placed in the OnCallWorkbook excel file");
 		}
 	}
 	
