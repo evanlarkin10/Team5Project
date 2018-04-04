@@ -2,9 +2,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Arrays;
 
 import jxl.*;
 import jxl.write.*;
+import jxl.format.CellFormat;
+import jxl.format.Colour;
 import jxl.write.Number;
 import jxl.write.biff.RowsExceededException;
 import jxl.read.biff.BiffException;
@@ -18,6 +21,7 @@ public class ConfigWorkbook {
 	private File configFile;
 	private Workbook wb;
 	private WritableWorkbook wbWritable;
+	private WritableSheet skillSheetWritable;
 	private WritableSheet tallySheetWritable;
 	private WritableWorkbook copyDocument;
 	
@@ -66,7 +70,7 @@ public class ConfigWorkbook {
 			//Add courses to teachers starting with the first teacher
 			nameColumn = masterSchedule.findCell(teachers.get(0).NAME).getColumn();
 			row = masterSchedule.findCell(teachers.get(0).NAME).getRow();
-
+			next=2;
 			for(Teacher teacher : teachers){
 				ArrayList<Course> courses = new ArrayList<Course>();
 				for(int i = 1; i <= numberOfPeriods; i++){
@@ -89,7 +93,7 @@ public class ConfigWorkbook {
 						break;	
 					}
 
-					courses.add(new Course(masterSchedule.getCell(nameColumn + i ,row).getContents(), period ,teacher));
+					courses.add(new Course(masterSchedule.getCell(nameColumn + i +2 ,next).getContents(), period ,teacher));
 
 				}
 				
@@ -103,38 +107,27 @@ public class ConfigWorkbook {
 		getAbsences(teachers);
 		
 		//Add skills to teacher 
-		int column = masterSchedule.findCell("Teachable Skill").getColumn();
-		row = masterSchedule.findCell("Teachable Skill").getRow() + 1;
-		
-		for(Teacher teacher : teachers){
-			ArrayList<String> skills = new ArrayList<String>();
-			String teacherSkill = masterSchedule.getCell(column ,row + teachers.indexOf(teacher)).getContents() ;
-			skills.add(teacherSkill);
-
-			}
-			
-			//Add skills to teacher 
-			column = masterSchedule.findCell("Teachable Skill").getColumn();
+			ArrayList<ArrayList<String>> skillList = getSkillList();
+			int column = masterSchedule.findCell("Teachable Skill").getColumn();
 			row = masterSchedule.findCell("Teachable Skill").getRow() + 1;
-
 			
 			for(Teacher teacher : teachers){
-				ArrayList<String> skills = new ArrayList<String>();
 				String teacherSkill = masterSchedule.getCell(column ,row + teachers.indexOf(teacher)).getContents() ;
-				skills.add(teacherSkill);
-				
-				for(String skill : skills){
-					teacher.addSkill(skill);
+				if(teacherSkill == "") {
+					teacher.assignSkill(skillList);
+					try {
+						this.writeSkills(teacher.skills, 2, row + teachers.indexOf(teacher));
+					}catch(Exception e) {
+						System.out.println("Error writing in skills");
+					}
 				}
-			
+				else {
+					teacher.addSkill(teacherSkill);
+				}
 
-
-			for(String skill : skills){
-				teacher.addSkill(skill);
 			}
-		}
 			//Print out teachers , courses, and Period they teach
-			/*
+			
 
 			
 			//Print out teachers , courses, and Period they teach
@@ -146,7 +139,7 @@ public class ConfigWorkbook {
 				}
 				System.out.println();
 			}
-			*/
+			
 			return teachers;
 	}
 	
@@ -162,9 +155,11 @@ public class ConfigWorkbook {
 		while (! tallySheetWritable.getCell(column , startingRow + next).getContents().equals("")) {
 			
 			WritableCell cell;
+			CellFormat cf = (tallySheet.getCell(column, (startingRow + next))).getCellFormat();
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
-			tallySheetWritable.addCell(cell);	
+			cell.setCellFormat(cf);
+			tallySheetWritable.addCell(cell);
 			next++;
 		}
 		
@@ -184,9 +179,10 @@ public class ConfigWorkbook {
 		
 		while (!(tallySheetWritable.getCell(column, (startingRow + next)).getContents()).equals("")) {			
 			WritableCell cell;
+			CellFormat cf = (tallySheet.getCell(column, (startingRow + next))).getCellFormat();
 			Number resetTally = new Number(column, (startingRow + next), 0);
 			cell = (WritableCell) resetTally;
-			
+			cell.setCellFormat(cf);
 			tallySheetWritable.addCell(cell);	
 			next++;
 		}
@@ -197,6 +193,68 @@ public class ConfigWorkbook {
 		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
 	}
 	
+	public void incrementTally(String teacherName)  throws BiffException, IOException, RowsExceededException, WriteException {
+		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
+		tallySheetWritable = wbWritable.getSheet("Tally");	
+
+		int row = tallySheetWritable.findCell(teacherName).getRow();
+		int currentWeeklyTally = Integer.parseInt(tallySheetWritable.getCell(1, row).getContents());
+		int currentMonthlyTally = Integer.parseInt(tallySheetWritable.getCell(2, row).getContents());
+				
+		WritableCell weeklyCell;
+		WritableCell monthlyCell;
+		
+		CellFormat cf = (tallySheet.getCell(1, row)).getCellFormat();
+		
+		Number incrementedWeeklyTally = new Number(1, row, currentWeeklyTally + 1);
+		Number incrementedMonthlyTally = new Number(2, row, currentMonthlyTally + 1);
+		
+		weeklyCell = (WritableCell) incrementedWeeklyTally;
+		monthlyCell = (WritableCell) incrementedMonthlyTally;
+		
+		weeklyCell.setCellFormat(cf);
+		monthlyCell.setCellFormat(cf);
+		tallySheetWritable.addCell(weeklyCell);
+		tallySheetWritable.addCell(monthlyCell);
+		
+		
+		wbWritable.write();
+		wbWritable.close();
+		
+		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
+	}
+	
+	public void writeSkills(String skills, int col, int row)  throws BiffException, IOException, RowsExceededException, WriteException{
+		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
+		skillSheetWritable = wbWritable.getSheet("Master Schedule");	
+		skillSheetWritable.addCell(new Label(col, row, skills));		
+		wbWritable.write();
+		wbWritable.close();
+		
+		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
+	
+	}
+	private ArrayList<ArrayList<String>> getSkillList(){
+		Sheet schedule = masterSchedule;
+		Sheet skillList=skills;
+		ArrayList<ArrayList<String>> skillNames = new ArrayList<ArrayList<String>>();
+		int row = 2;
+		int next = 0;
+		int skillNameCol = skillList.findCell("Skill Name").getColumn();
+		int skillIDCol = skillList.findCell("Skill Identifiers").getColumn();
+		while (! skillList.getCell(skillNameCol, row+next).getContents().equals("")){
+			skillNames.add(new ArrayList<String>());
+			skillNames.get(next).add(skillList.getCell(skillNameCol ,row + next).getContents());
+			//Add each ID to the array list following the skill name
+			String skillIDs = skillList.getCell(skillIDCol ,row + next).getContents();
+			ArrayList<String> IDList = new ArrayList<String>(Arrays.asList(skillIDs.split(",")));
+			for(String id: IDList) {
+				skillNames.get(next).add(id);
+			}
+			next = next + 1;
+		}
+		return skillNames;
+	}
 	public ArrayList<Teacher> getSpareList(Period period, ArrayList<Teacher> teachers) {
 		
 		ArrayList<Teacher> spareTeachers = new ArrayList<Teacher>();
@@ -204,7 +262,7 @@ public class ConfigWorkbook {
 		for(Teacher teacher : teachers ){
 			for(Course course : teacher.courses){
 				if(course.period.equals(period) && course.courseTitle.equals("Spare")
-						&& (teacher.getAvailability())){
+						&& (teacher.getAvailability(period))){
 					//System.out.println("Period: " + course.courseTitle + " Teacher:" + teacher.NAME);
 					spareTeachers.add(teacher);
 				}
@@ -219,31 +277,31 @@ public class ConfigWorkbook {
 		
 		if(period.equals(Period.Period1)){
 			 for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP1){
+				 if((!teacher.isAvailableP1)){
 					 absentTeachers.add(teacher);
-				 }
+				 }				 
 			 }
 		}else if(period.equals(Period.Period2)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP2){
+				 if((!teacher.isAvailableP2)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else if(period.equals(Period.Period3A)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP3A){
+				 if((!teacher.isAvailableP3A)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else if(period.equals(Period.Period3B)){
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP3B){
+				 if((!teacher.isAvailableP3B)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
 		}else{
 			for(Teacher teacher : teachers){
-				 if(!teacher.isAvailableP4){
+				 if((!teacher.isAvailableP4)){
 					 absentTeachers.add(teacher);
 				 }
 			 }
@@ -263,10 +321,26 @@ public class ConfigWorkbook {
 			for(Teacher teacher : teachers){
 				column = absenceSchedule.findCell(getDayOfWeek()).getColumn();
 				row = absenceSchedule.findCell(teacher.NAME).getRow();
+				Period period;
 				
 				for(int i = 0; i < Period.values().length; i++ ){
+					if (i == 0){
+						period = Period.Period1;
+					}
+					else if (i == 1){
+						period = Period.Period2;
+					}
+					else if (i == 2){
+						period = Period.Period3A;
+					}
+					else if (i == 3){
+						period = Period.Period3B;
+					}
+					else {
+						period = Period.Period4;
+					}
 					String contents = absenceSchedule.getCell(column + i, row).getContents();
-					if(contents.equalsIgnoreCase("x")){
+					if(contents.equalsIgnoreCase("x") && !(getCourseName(teacher.NAME, period).equalsIgnoreCase("Spare"))){
 						switch(i) { 
 						case 0:
 							teacher.isAvailableP1 = false;
@@ -324,20 +398,61 @@ public class ConfigWorkbook {
 			
 			return dayOfWeek;
 	}
-			
+	
+	public void turnCellRed(Period period, String teacherName) throws WriteException, IOException, BiffException {
+		wbWritable = Workbook.createWorkbook(new File("ConfigFile.xls"), wb);
+		WritableSheet absenceScheduleWritable = wbWritable.getSheet("Week X");	
+		WritableCell cell = absenceScheduleWritable.getWritableCell(0, 0);
+		
+		int column = absenceSchedule.findCell(getDayOfWeek()).getColumn();
+		int row = absenceSchedule.findCell(teacherName).getRow();
+		
+		
+		if (period == Period.Period1) {
+			cell = absenceScheduleWritable.getWritableCell(column, row);
+		}
+		else if (period == Period.Period2) {
+			cell = absenceScheduleWritable.getWritableCell(column + 1, row);
+		}
+		else if (period == Period.Period3A) {
+			cell = absenceScheduleWritable.getWritableCell(column + 2, row);
+		}
+		else if (period == Period.Period3B) {
+			cell = absenceScheduleWritable.getWritableCell(column + 3, row);
+		}
+		else if (period == Period.Period4) {
+			cell = absenceScheduleWritable.getWritableCell(column + 4, row);
+		}
+
+		WritableCellFormat newFormat = new WritableCellFormat();
+		newFormat.setBackground(Colour.RED);
+		cell.setCellFormat(newFormat);
+		
+		wbWritable.write();
+		wbWritable.close();
+		
+		wb = Workbook.getWorkbook(new File("ConfigFile.xls"));
+	}
+	
+	public String getCourseName(String Teacher, Period period) {
+		String course = "";
+		
+		int column = masterSchedule.findCell(period.name()).getColumn();
+		int row = masterSchedule.findCell(Teacher).getRow();
+		
+		course = masterSchedule.getCell(column, row).getContents();
+		return course;
+	}
+	
+	public String getRoomNumber(String Teacher) {
+		String roomNumber = "";
+		
+		int column = 1;
+		int row = masterSchedule.findCell(Teacher).getRow();
+		
+		roomNumber = masterSchedule.getCell(column, row).getContents();
+		return roomNumber;
+	}
+	
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
