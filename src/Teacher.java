@@ -8,8 +8,7 @@ public class Teacher {
 	String skills = "";
 	String roomNumber;
 	boolean isAvailableP1 = true ,isAvailableP2 = true, isAvailableP3A = true, isAvailableP3B = true, isAvailableP4  = true;
-	boolean isAvailable = false;
-	
+	boolean isUnderLimit = false;
 	
 	public Teacher(String NAME, String roomIn){
 		this.NAME = NAME;
@@ -25,8 +24,8 @@ public class Teacher {
 		return courses;
 	}
 	
-	public boolean getAvailability() {
-		return isAvailable;
+	public boolean getIsUnderLimit() {
+		return isUnderLimit;
 	}
 	public boolean getAvailability(Period period) {
 		if(period == Period.Period1) 
@@ -46,8 +45,8 @@ public class Teacher {
 		
 	}
 	
-	public void isAvailable() {
-		isAvailable  = true;
+	public void setIsUnderLimit() {
+		isUnderLimit  = true;
 	}
 	
 	public void addSkill(String skill){  skills = skills + " " + skill;     }
@@ -72,5 +71,7 @@ public class Teacher {
 				
 			}
 		}
+
+
 	
 }

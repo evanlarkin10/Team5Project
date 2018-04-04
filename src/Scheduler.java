@@ -45,8 +45,22 @@ public class Scheduler {
 		String report = "";
 		Iterator<Teacher> itr = spareList1.iterator();
 		for(Teacher absentee: absenceList1) {
+			boolean found = false;
+			Teacher potentialSub;
 			if(itr.hasNext()) {
-				report += getOnCallRecord(Period.Period1, absentee, itr.next()) + "\n";
+				//Loop until one is found that is under the board limit
+				while(!found) {
+					if(itr.hasNext()) {
+						potentialSub = itr.next();
+						if(potentialSub.getIsUnderLimit()) {
+							report += getOnCallRecord(Period.Period1, absentee, potentialSub) + "\n";
+							configWB.turnCellGreen(Period.Period1, absentee.NAME);
+							//configWB.incrementTally(potentialSub.NAME);
+							found=true;
+						}
+					}
+				}
+				
 			}
 			else {
 				report += "No on caller found for: " + Period.Period1 + " " + absentee.NAME+ "\n";
@@ -59,8 +73,22 @@ public class Scheduler {
 		String report = "";
 		Iterator<Teacher> itr = spareList2.iterator();
 		for(Teacher absentee: absenceList2) {
+			boolean found = false;
+			Teacher potentialSub;
 			if(itr.hasNext()) {
-				report += getOnCallRecord(Period.Period2, absentee, itr.next()) + "\n";
+				//Loop until one is found that is under the board limit
+				while(!found) {
+					if(itr.hasNext()) {
+						potentialSub = itr.next();
+						if(potentialSub.getIsUnderLimit()) {
+							report += getOnCallRecord(Period.Period2, absentee, potentialSub) + "\n";
+							configWB.turnCellGreen(Period.Period2, absentee.NAME);
+							//configWB.incrementTally(potentialSub.NAME);
+							found=true;
+						}
+					}
+				}
+				
 			}
 			else {
 				report += "No on caller found for: " + Period.Period2 + " " + absentee.NAME+ "\n";
@@ -73,8 +101,22 @@ public class Scheduler {
 		String report = "";
 		Iterator<Teacher> itr = spareList3A.iterator();
 		for(Teacher absentee: absenceList3A) {
+			boolean found = false;
+			Teacher potentialSub;
 			if(itr.hasNext()) {
-				report += getOnCallRecord(Period.Period3A, absentee, itr.next()) + "\n";
+				//Loop until one is found that is under the board limit
+				while(!found) {
+					if(itr.hasNext()) {
+						potentialSub = itr.next();
+						if(potentialSub.getIsUnderLimit()) {
+							report += getOnCallRecord(Period.Period3A, absentee, potentialSub) + "\n";
+							configWB.turnCellGreen(Period.Period3A, absentee.NAME);
+							//configWB.incrementTally(potentialSub.NAME);
+							found=true;
+						}
+					}
+				}
+				
 			}
 			else {
 				report += "No on caller found for: " + Period.Period3A + " " + absentee.NAME+ "\n";
@@ -87,8 +129,22 @@ public class Scheduler {
 		String report = "";
 		Iterator<Teacher> itr = spareList3B.iterator();
 		for(Teacher absentee: absenceList3B) {
+			boolean found = false;
+			Teacher potentialSub;
 			if(itr.hasNext()) {
-				report += getOnCallRecord(Period.Period3B, absentee, itr.next()) + "\n";
+				//Loop until one is found that is under the board limit
+				while(!found) {
+					if(itr.hasNext()) {
+						potentialSub = itr.next();
+						if(potentialSub.getIsUnderLimit()) {
+							report += getOnCallRecord(Period.Period3B, absentee, potentialSub) + "\n";
+							configWB.turnCellGreen(Period.Period3B, absentee.NAME);
+							//configWB.incrementTally(potentialSub.NAME);
+							found=true;
+						}
+					}
+				}
+				
 			}
 			else {
 				report += "No on caller found for: " + Period.Period3B + " " + absentee.NAME+ "\n";
@@ -101,8 +157,22 @@ public class Scheduler {
 		String report = "";
 		Iterator<Teacher> itr = spareList4.iterator();
 		for(Teacher absentee: absenceList4) {
+			boolean found = false;
+			Teacher potentialSub;
 			if(itr.hasNext()) {
-				report += getOnCallRecord(Period.Period4, absentee, itr.next()) + "\n";
+				//Loop until one is found that is under the board limit
+				while(!found) {
+					if(itr.hasNext()) {
+						potentialSub = itr.next();
+						if(potentialSub.getIsUnderLimit()) {
+							report += getOnCallRecord(Period.Period4, absentee, potentialSub) + "\n";
+							configWB.turnCellGreen(Period.Period4, absentee.NAME);
+							//configWB.incrementTally(potentialSub.NAME);
+							found=true;
+						}
+					}
+				}
+				
 			}
 			else {
 				report += "No on caller found for: " + Period.Period4 + " " + absentee.NAME+ "\n";
