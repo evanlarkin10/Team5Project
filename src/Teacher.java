@@ -51,27 +51,21 @@ public class Teacher {
 	
 	public void addSkill(String skill){  skills = skills + " " + skill;     }
 	
-	//This method searches the teachers courses and assigns skills based on the skill spreadsheet
-		public void assignSkill(ArrayList<ArrayList<String>> skillList) {
-			int i;
-			for( Course course: getCourses()) {
-				i=0;
-				for(ArrayList<String> list : skillList) {
-					for( String skill : skillList.get(i)) {
-						if(skill.equals(course.getCourseName())) {
-							
-							//Add if not already listed
-							if(!skills.contains(skillList.get(i).get(0)))
-								skills = skills + " " + skillList.get(i).get(0);
+	public void assignSkill(ArrayList<ArrayList<String>> skillList) {
+		int i;
+		for( Course course: getCourses()) {
+			i=0;
+			for(ArrayList<String> list : skillList) {
+				for( String skill : skillList.get(i)) {
+					if(skill.equals(course.getCourseName())) {
+						if(!skills.contains(skillList.get(i).get(0))) {
+							skills = skills + " " + skillList.get(i).get(0);
 						}
-						
-					}
-					i=i+1;
-				}
-				
-			}
+					}						
+				}	
+				i++;
+			}			
 		}
+	}
 
-
-	
 }
