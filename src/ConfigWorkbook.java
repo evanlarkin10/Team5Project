@@ -36,7 +36,7 @@ public class ConfigWorkbook {
 	}
 	
 	public ArrayList<Teacher> getTeachers() {
-		//Locate teachers in the spreadsheet
+		
 		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 		int numberOfPeriods = 5;
 		int nameColumn;
@@ -48,7 +48,6 @@ public class ConfigWorkbook {
 			roomColumn = masterSchedule.findCell("Room Number").getColumn();
 			row = masterSchedule.findCell("Teacher's Name").getRow();
 			
-			//Create Teacher Objects from the spreadsheet
 			next = 1;
 			while (! masterSchedule.getCell(nameColumn ,row + next).getContents().equals("")){
 				teachers.add(new Teacher(masterSchedule.getCell(nameColumn ,row + next).getContents(),
@@ -59,7 +58,7 @@ public class ConfigWorkbook {
 
 				int currentWeeklyMax = Integer.parseInt(tallySheet.getCell(3, row + next).getContents());
 				int currentMonthlyMax = Integer.parseInt(tallySheet.getCell(4, row + next).getContents());
-				System.out.print(currentWeeklyTally + " " + currentWeeklyMax + " " + currentMonthlyTally + " " + currentMonthlyMax);
+				
 				if ((currentWeeklyTally < currentWeeklyMax) && (currentMonthlyTally < currentMonthlyMax)) {
 					teachers.get(next - 1).setIsUnderLimit();
 				}
@@ -67,7 +66,6 @@ public class ConfigWorkbook {
 				next = next + 1;
 			}
 		
-			//Add courses to teachers starting with the first teacher
 			nameColumn = masterSchedule.findCell(teachers.get(0).NAME).getColumn();
 			row = masterSchedule.findCell(teachers.get(0).NAME).getRow();
 			next=2;
@@ -103,10 +101,8 @@ public class ConfigWorkbook {
 				next = next + 1;
 			}
 			
-		//getAbsence for teacher
-		getAbsences(teachers);
+			getAbsences(teachers);
 		
-		//Add skills to teacher 
 			ArrayList<ArrayList<String>> skillList = getSkillList();
 			int column = masterSchedule.findCell("Teachable Skill").getColumn();
 			row = masterSchedule.findCell("Teachable Skill").getRow() + 1;
@@ -125,19 +121,6 @@ public class ConfigWorkbook {
 					teacher.addSkill(teacherSkill);
 				}
 
-			}
-			//Print out teachers , courses, and Period they teach
-			
-
-			
-			//Print out teachers , courses, and Period they teach
-
-			for(Teacher teacher : teachers){
-				System.out.println(teacher.NAME + " Skill:" + teacher.skills);
-				for(Course course : teacher.courses){
-					System.out.println(course.courseTitle + " " + course.period);
-				}
-				System.out.println();
 			}
 			
 			return teachers;
@@ -245,7 +228,7 @@ public class ConfigWorkbook {
 		while (! skillList.getCell(skillNameCol, row+next).getContents().equals("")){
 			skillNames.add(new ArrayList<String>());
 			skillNames.get(next).add(skillList.getCell(skillNameCol ,row + next).getContents());
-			//Add each ID to the array list following the skill name
+			
 			String skillIDs = skillList.getCell(skillIDCol ,row + next).getContents();
 			ArrayList<String> IDList = new ArrayList<String>(Arrays.asList(skillIDs.split(",")));
 			for(String id: IDList) {
@@ -263,7 +246,6 @@ public class ConfigWorkbook {
 			for(Course course : teacher.courses){
 				if(course.period.equals(period) && course.courseTitle.equals("Spare")
 						&& (teacher.getAvailability(period))){
-					//System.out.println("Period: " + course.courseTitle + " Teacher:" + teacher.NAME);
 					spareTeachers.add(teacher);
 				}
 			}
@@ -271,7 +253,7 @@ public class ConfigWorkbook {
 		return spareTeachers;
 	}
 	
-	//creates a list of Absent teachers by period
+	
 	public ArrayList<Teacher> getAbsencesByPeriod(Period period , ArrayList<Teacher> teachers){
 		ArrayList<Teacher> absentTeachers = new ArrayList<Teacher>();
 		
@@ -310,7 +292,7 @@ public class ConfigWorkbook {
 		return absentTeachers;
 	}
 	
-	//sets the available variables in teacher for use in the getAbsence
+	
 	private void getAbsences(ArrayList<Teacher> teachers){
 		
 		int column;
@@ -366,7 +348,7 @@ public class ConfigWorkbook {
 
 	}
 
-	//returns the numeric day of the week - to be used inside assignOnCalls
+	
 	private String getDayOfWeek() {
 			Calendar calendar = Calendar.getInstance();
 			int dayOfWeekint = calendar.get(Calendar.DAY_OF_WEEK);

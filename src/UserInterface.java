@@ -73,8 +73,6 @@ public class UserInterface extends JFrame implements ActionListener{
 
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            File file = fc.getSelectedFile();
-	            //Path to file displayed in an alert
-	        		//JOptionPane.showMessageDialog(null, fc.getSelectedFile());
 	            try {
 					initialize(file);
 				} 
@@ -117,7 +115,6 @@ public class UserInterface extends JFrame implements ActionListener{
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (WriteException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -151,7 +148,6 @@ public class UserInterface extends JFrame implements ActionListener{
 		label.setText("Workbook Found");
 		fileSelected = configFile;
 		
-		//Sets up workbook
 		workbook = new ConfigWorkbook(fileSelected);
 		configWorkbook = workbook;
 		
@@ -168,7 +164,6 @@ public class UserInterface extends JFrame implements ActionListener{
 		String p3BReport = scheduleOnCalls.assignOnCallsP3B();
 		String p4Report = scheduleOnCalls.assignOnCallsP4();
 		
-		System.out.println(p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report);
 		String report = p1Report + "\n" + p2Report+ "\n" +p3AReport+ "\n" +p3BReport+ "\n" +p4Report;
 		JTextArea reportArea = new JTextArea(report);
 		JPanel reportPanel = new JPanel();
@@ -183,24 +178,6 @@ public class UserInterface extends JFrame implements ActionListener{
 		contentPane.remove(outputPanel);
 		contentPane.add(outputPanel);
 		setVisible(true);
-		
-		/*
-		//Available On-Callers by period
-		ArrayList<Teacher> onCallersP1 = workbook.getSpareList(Period.Period1, teachers);
-		ArrayList<Teacher> onCallersP2 = workbook.getSpareList(Period.Period2, teachers);
-		ArrayList<Teacher> onCallersP3A = workbook.getSpareList(Period.Period3A, teachers);
-		ArrayList<Teacher> onCallersP3B = workbook.getSpareList(Period.Period3B, teachers);
-		ArrayList<Teacher> onCallersP4 = workbook.getSpareList(Period.Period4, teachers);
-		 
-		//get a list of teachers by absent period
-		ArrayList<Teacher> absentP1 = workbook.getAbsencesByPeriod(Period.Period1, teachers);
-		ArrayList<Teacher> absentP2 = workbook.getAbsencesByPeriod(Period.Period2, teachers);
-		ArrayList<Teacher> absentP3A = workbook.getAbsencesByPeriod(Period.Period3A, teachers);
-		ArrayList<Teacher> absentP3B = workbook.getAbsencesByPeriod(Period.Period3B, teachers);
-		ArrayList<Teacher> absentP4 = workbook.getAbsencesByPeriod(Period.Period4, teachers); 
-		 
-		 */
-		
 		
 	}
 	
